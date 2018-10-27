@@ -6,6 +6,7 @@ import moment from 'moment-timezone';
 moment.tz.setDefault('UTC'); //this is important to have time consistency across the world
 
 import Axios from 'axios';
+// import { stat } from 'fs';
 
 export default new Vuex.Store({
     //state properties
@@ -35,6 +36,16 @@ export default new Vuex.Store({
         addEvent(state, payload) {
             state.events.push(payload);
         },
+        removeEvent(state, payload) {
+            let eventsUpdated = state.events
+            const identifier = payload
+            const indexOfEvent = state.events.forEach((event, ind) => {
+                if(event.posX === identifier)
+                return ind
+            })
+            eventsUpdated.splice(indexOfEvent, 1)
+            state.events = eventsUpdated
+        },
         eventFormDate(state, payload) {
             state.eventFormDate = payload;
         }
@@ -44,7 +55,8 @@ export default new Vuex.Store({
             return new Promise((resolve, reject) => {
                 let obj = {
                     description: payload,
-                    date: context.state.eventFormDate
+                    date: context.state.eventFormDate,
+                    posX: context.state.eventFormPosX
                 }
                 context.commit('addEvent', obj)
                 Axios.post('/add_event', obj).then(response => {
