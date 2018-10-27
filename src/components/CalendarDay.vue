@@ -33,7 +33,8 @@ export default {
             this.$store.commit('eventFormActive', true);
             this.$store.commit('eventFormDate', this.day);
             console.log(this.day);
-        }
+        }, 
+        
     }
 
 }
