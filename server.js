@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const http = require('http');
 const moment = require('moment-timezone');
-moment.tz.setDefault('UTC');
+moment.tz.setDefault();
 const serialize = require('serialize-javascript');
 
 app.use('/public', express.static(path.join(__dirname, 'public')));
@@ -22,9 +22,6 @@ if (process.env.NODE_ENV === 'production') {
 
 let events =
   [
-    { description: 'Random event 1', date: moment('2018-09-12', 'YYYY-MM-DD') },
-    { description: 'Random event 2', date: moment('2018-09-13', 'YYYY-MM-DD') },
-    { description: 'Random event 3', date: moment('2018-10-16', 'YYYY-MM-DD') }
   ];
 
 let contentMarker = '<!--APP-->';
