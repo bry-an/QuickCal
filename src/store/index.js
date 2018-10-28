@@ -74,6 +74,21 @@ export default new Vuex.Store({
                     }
                 })
             }); //with an action you can return a promise
+        },
+        deleteEvent(context, payload) { //actions always have these two properties. Context is whole store (actions need access to state and mutations)
+            return new Promise((resolve, reject) => {
+                let obj = {
+                    posX: payload
+                }
+                Axios.delete('/remove_event', { data: obj}).then(response => {
+                    if (response.status === 200) {
+                    context.commit('removeEvent', obj.posX)
+                        resolve(); //everything works, return resolve()
+                    } else {
+                        reject(); //some problem, return reject()
+                    }
+                })
+            }); //with an action you can return a promise
         }
     }
 })

@@ -45,7 +45,30 @@ app.get('/', (req, res) => {
 });
 
 
+
 app.use(require('body-parser').json());
+app.post('/add_event', (req, res) => {
+  newEvent = new Event({
+    description: req.body.description,
+    date: moment(req.body.date),
+    posX: req.body.posX
+  })
+  newEvent.save()
+  res.sendStatus(200)
+})
+
+app.delete('/remove_event', (req, res) => {
+  console.log('req body', req.body)
+  Event.deleteOne({
+    posX: req.body.posX
+  })
+  .then(err=> {
+    if (err)console.log(err)
+    res.sendStatus(200)
+  })
+})
+
+
 // app.post('/add_event', (req, res) => {
 //   events.push({
 //     description: req.body.description,

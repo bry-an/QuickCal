@@ -36,7 +36,8 @@ export default {
             }
         }, 
         removeEvent(eventPosX) {
-            this.$store.commit('removeEvent', eventPosX)
+            this.$store.dispatch('deleteEvent', eventPosX)
+            // this.$store.commit('removeEvent', eventPosX)
         }
     }
 
