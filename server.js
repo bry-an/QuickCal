@@ -29,6 +29,18 @@ let events =
 let contentMarker = '<!--APP-->';
 
 app.get('/', (req, res) => {
+  Event.find({})
+    .then(res => {
+      console.log(res)
+      res.forEach(item => {
+        const obj= {
+          description: item.description, 
+          date: moment(item.date),
+          posX: item.posX
+        }
+        events.push(obj)
+      })
+    })
   let template = fs.readFileSync(path.resolve('./index.html'), 'utf-8');
   if (renderer) {
     renderer.renderToString({ events }, (err, html) => {
