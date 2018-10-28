@@ -29,6 +29,7 @@ let events =
 let contentMarker = '<!--APP-->';
 
 app.get('/', (req, res) => {
+  events = []
   Event.find({})
     .then(res => {
       res.forEach(item => {
