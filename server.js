@@ -8,6 +8,8 @@ const http = require('http');
 const moment = require('moment-timezone');
 moment.tz.setDefault();
 const serialize = require('serialize-javascript');
+const mongoose = require('mongoose')
+const Event = require('./models/events')
 
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
@@ -44,14 +46,14 @@ app.get('/', (req, res) => {
 
 
 app.use(require('body-parser').json());
-app.post('/add_event', (req, res) => {
-  events.push({
-    description: req.body.description,
-    date: moment(req.body.date),
-    posX: req.body.posX
-  });
-  res.sendStatus(200);
-})
+// app.post('/add_event', (req, res) => {
+//   events.push({
+//     description: req.body.description,
+//     date: moment(req.body.date),
+//     posX: req.body.posX
+//   });
+//   res.sendStatus(200);
+// })
 
 const server = http.createServer(app);
 
@@ -70,6 +72,10 @@ if (process.env.NODE_ENV === 'development') {
 
   })
 }
+
+mongoose.connect(
+  process.env.MONGODB_URI || 'mongodb://localhost/quickcal'
+)
 
 server.listen(process.env.PORT, function () {
   console.log(`Example app listening on port ${process.env.PORT}!`);
