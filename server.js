@@ -47,7 +47,8 @@ app.use(require('body-parser').json());
 app.post('/add_event', (req, res) => {
   events.push({
     description: req.body.description,
-    date: moment(req.body.date)
+    date: moment(req.body.date),
+    posX: req.body.posX
   });
   res.sendStatus(200);
 })

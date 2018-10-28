@@ -39,12 +39,18 @@ export default new Vuex.Store({
         removeEvent(state, payload) {
             let eventsUpdated = state.events
             const identifier = payload
-            const indexOfEvent = state.events.forEach((event, ind) => {
-                if(event.posX === identifier)
-                return ind
-            })
+            let indexOfEvent
+            for (let i=0; i < state.events.length; i++) {
+                if(state.events[i].posX === identifier) {
+                    console.log('for lp if trigg')
+                    indexOfEvent = i
+                }
+            }
+            console.log('ioe', indexOfEvent)
+            if (indexOfEvent || indexOfEvent === 0) {
             eventsUpdated.splice(indexOfEvent, 1)
             state.events = eventsUpdated
+            }
         },
         eventFormDate(state, payload) {
             state.eventFormDate = payload;

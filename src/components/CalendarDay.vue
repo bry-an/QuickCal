@@ -29,9 +29,11 @@ export default {
     }, 
     methods: {
         captureClick(event) {
+            if (event.target.nodeName !== "LI") {
             this.$store.commit('eventFormPos', {x: event.clientX, y: event.clientY });
             this.$store.commit('eventFormActive', true);
             this.$store.commit('eventFormDate', this.day);
+            }
         }, 
         removeEvent(eventPosX) {
             this.$store.commit('removeEvent', eventPosX)
