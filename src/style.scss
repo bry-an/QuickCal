@@ -36,17 +36,17 @@ $calendar-border: 1px solid $alto;
   font-style: normal;
 }
 
+html {
+  overflow-y: scroll;
+}
 body {
   font-family: 'Muli', Helvetica, Arial, sans-serif;
   color: $pickled-bluewood;
   padding-bottom: 2rem;
-
   display: flex;
   justify-content: center;
   width: 100%;
   overflow: hidden;
-
-
   background-color: $pickled-bluewood;
 
   #app {
