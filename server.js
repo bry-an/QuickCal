@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
       }
     });
   } else {
-    res.send('<p>Loading...</p><script src="/reload/reload.js"></script>') //need to ues reload module so don't have to reload the page after compilation
+    res.send('<p>Loading...</p><script src="/reload/reload.js"></script>') //need to use reload module so don't have to reload the page after compilation
   }
 
 });
