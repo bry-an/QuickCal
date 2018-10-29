@@ -27,36 +27,37 @@ let events =
   ];
 
 let contentMarker = '<!--APP-->';
+let template = fs.readFileSync(path.resolve('./index.html'), 'utf-8');
 
 app.get('/', (req, res) => {
   events = []
   Event.find({})
-    .then(res => {
-      res.forEach(item => {
-        const obj= {
-          description: item.description, 
+    .then(response => {
+      response.forEach(item => {
+        const obj = {
+          description: item.description,
           date: moment(item.date),
           posX: item.posX
         }
-        console.log('filter', events.find(event=> event.posX === obj.posX))
-        if (!events.find(event=> event.posX === obj.posX))
-        events.push(obj)
+        console.log('filter', events.find(event => event.posX === obj.posX))
+        if (!events.find(event => event.posX === obj.posX))
+          events.push(obj)
       })
     })
-    console.log('events from appget/', events)
-  let template = fs.readFileSync(path.resolve('./index.html'), 'utf-8');
-  if (renderer) {
-    renderer.renderToString({ events }, (err, html) => {
-      if (err) {
-        console.log(err);
+    .then(_ => {
+      if (renderer) {
+        renderer.renderToString({ events }, (err, html) => {
+          if (err) {
+            console.log(err);
+          } else {
+            res.send(template.replace(contentMarker, `<script>var __INITIAL_STATE__ = ${serialize(events)}</script>\n${html}`));//html is what we've generated with our server-side renderer
+          }
+        });
       } else {
-        res.send(template.replace(contentMarker, `<script>var __INITIAL_STATE__ = ${serialize(events)}</script>\n${html}`));//html is what we've generated with our server-side renderer
+        res.send('<p>Loading...</p><script src="/reload/reload.js"></script>') //need to use reload module so don't have to reload the page after compilation
       }
-    });
-  } else {
-    res.send('<p>Loading...</p><script src="/reload/reload.js"></script>') //need to use reload module so don't have to reload the page after compilation
-  }
-
+    })
+  console.log('events from appget/', events)
 });
 
 
@@ -77,10 +78,10 @@ app.delete('/remove_event', (req, res) => {
   Event.deleteOne({
     posX: req.body.posX
   })
-  .then(err=> {
-    if (err)console.log(err)
-    res.sendStatus(200)
-  })
+    .then(err => {
+      if (err) console.log(err)
+      res.sendStatus(200)
+    })
 })
 
 
