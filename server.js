@@ -6,8 +6,10 @@ const path = require('path');
 const fs = require('fs');
 const http = require('http');
 const moment = require('moment-timezone');
-moment.tz.setDefault('UTC');
+moment.tz.setDefault();
 const serialize = require('serialize-javascript');
+const mongoose = require('mongoose')
+const Event = require('./models/events')
 
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
@@ -22,14 +24,26 @@ if (process.env.NODE_ENV === 'production') {
 
 let events =
   [
-    { description: 'Random event 1', date: moment('2018-09-12', 'YYYY-MM-DD') },
-    { description: 'Random event 2', date: moment('2018-09-13', 'YYYY-MM-DD') },
-    { description: 'Random event 3', date: moment('2018-10-16', 'YYYY-MM-DD') }
   ];
 
 let contentMarker = '<!--APP-->';
 
 app.get('/', (req, res) => {
+  events = []
+  Event.find({})
+    .then(res => {
+      res.forEach(item => {
+        const obj= {
+          description: item.description, 
+          date: moment(item.date),
+          posX: item.posX
+        }
+        console.log('filter', events.find(event=> event.posX === obj.posX))
+        if (!events.find(event=> event.posX === obj.posX))
+        events.push(obj)
+      })
+    })
+    console.log('events from appget/', events)
   let template = fs.readFileSync(path.resolve('./index.html'), 'utf-8');
   if (renderer) {
     renderer.renderToString({ events }, (err, html) => {
@@ -46,14 +60,38 @@ app.get('/', (req, res) => {
 });
 
 
+
 app.use(require('body-parser').json());
 app.post('/add_event', (req, res) => {
-  events.push({
+  newEvent = new Event({
     description: req.body.description,
-    date: moment(req.body.date)
-  });
-  res.sendStatus(200);
+    date: moment(req.body.date),
+    posX: req.body.posX
+  })
+  newEvent.save()
+  res.sendStatus(200)
 })
+
+app.delete('/remove_event', (req, res) => {
+  console.log('req body', req.body)
+  Event.deleteOne({
+    posX: req.body.posX
+  })
+  .then(err=> {
+    if (err)console.log(err)
+    res.sendStatus(200)
+  })
+})
+
+
+// app.post('/add_event', (req, res) => {
+//   events.push({
+//     description: req.body.description,
+//     date: moment(req.body.date),
+//     posX: req.body.posX
+//   });
+//   res.sendStatus(200);
+// })
 
 const server = http.createServer(app);
 
@@ -72,6 +110,10 @@ if (process.env.NODE_ENV === 'development') {
 
   })
 }
+
+mongoose.connect(
+  process.env.MONGODB_URI || 'mongodb://localhost/quickcal'
+)
 
 server.listen(process.env.PORT, function () {
   console.log(`Example app listening on port ${process.env.PORT}!`);

@@ -2,7 +2,7 @@
 <div :class='classObject' @click='captureClick'>
 {{ day.format('D') }}
 <ul class='event-list'>
-    <li v-for='event in events'>{{ event.description }}</li>
+    <li v-for='event in events' :key='event.posX' @click='removeEvent(event.posX)'>{{ event.description }}</li>
 </ul>
 </div>
 
@@ -29,10 +29,15 @@ export default {
     }, 
     methods: {
         captureClick(event) {
+            if (event.target.nodeName !== "LI") {
             this.$store.commit('eventFormPos', {x: event.clientX, y: event.clientY });
             this.$store.commit('eventFormActive', true);
             this.$store.commit('eventFormDate', this.day);
-            console.log(this.day);
+            }
+        }, 
+        removeEvent(eventPosX) {
+            this.$store.dispatch('deleteEvent', eventPosX)
+            // this.$store.commit('removeEvent', eventPosX)
         }
     }
 

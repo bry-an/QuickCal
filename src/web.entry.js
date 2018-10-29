@@ -8,7 +8,8 @@ moment.tz.setDefault('UTC'); //this is important to have time consistency across
 let events = window.__INITIAL_STATE__.map(event => {
   return {
     description: event.description, 
-    date: moment(event.date)
+    date: moment(event.date),
+    posX: event.posX
   }
 });
 
