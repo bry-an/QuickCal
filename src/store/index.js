@@ -12,7 +12,7 @@ export default new Vuex.Store({
     //state properties
     state: {
         currentYear: 2018,
-        currentMonth: 10,
+        currentMonth: 11,
         eventFormPosX: 0,
         eventFormPosY: 0,
         eventFormActive: false,
