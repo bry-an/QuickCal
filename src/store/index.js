@@ -11,8 +11,8 @@ import Axios from 'axios';
 export default new Vuex.Store({
     //state properties
     state: {
-        currentYear: 2018,
-        currentMonth: 11,
+        currentYear: moment().format("YYYY"),
+        currentMonth: moment.format("MM"),
         eventFormPosX: 0,
         eventFormPosY: 0,
         eventFormActive: false,
